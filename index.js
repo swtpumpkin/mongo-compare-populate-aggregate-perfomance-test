@@ -25,19 +25,19 @@ async function createBooks(numberOfItems, createdAuthors) {
 };
 
 async function init() {
-  console.log("cleaning db");
+  console.log("Cleaning DB");
   await Promise.all([Author.deleteMany({}), Book.deleteMany({})]);
-  console.log("db cleaned");
+  console.log("DB cleaned");
   const numberOfItems = 10000;
-  console.log(`adding ${numberOfItems} authors to the database`);
-  console.time("createAuthors");
+  console.log(`Adding ${numberOfItems} authors to the database`);
+  console.time("Create Authors");
   const authors = await createAuthors(numberOfItems);
-  console.timeEnd("createAuthors");
-  console.log(`adding ${numberOfItems} books to the database`);
-  console.time("createBooks");
+  console.timeEnd("Create Authors");
+  console.log(`Adding ${numberOfItems} books to the database`);
+  console.time("Create Books");
   await createBooks(numberOfItems, authors);
-  console.timeEnd("createBooks");
-  console.log(`finished the database with ${numberOfItems} authors and books`);
+  console.timeEnd("Create Books");
+  console.log(`Finished the database with ${numberOfItems} authors and books`);
 }
 
 (async () => {
@@ -51,10 +51,10 @@ async function init() {
     console.log("DB connected.");
     await init()
     console.log("Init DB.");
-    console.time("populate");
+    console.time("Book populate");
     await Book.find().populate("authors");
-    console.timeEnd("populate");
-    console.time("aggregate");
+    console.timeEnd("Book populate");
+    console.time("Book aggregate");
     await Book.aggregate([{
       $lookup: {
         from: "authors",
@@ -63,8 +63,9 @@ async function init() {
         as: "authors",
       },
     }]);
-    console.timeEnd("aggregate");
+    console.timeEnd("Book aggregate");
     await mongoose.connection.db.dropDatabase();
+    console.log("Dropping DB");
     process.exit();
   } catch(e) {
     console.error(e);
