@@ -17,4 +17,5 @@ Finished the database with 10000 authors and books
 Init DB.
 Book populate: 1.047s
 Book aggregate: 4.409s
+Dropping DB
 ```
